@@ -467,7 +467,7 @@ def create_sample_ipynb(tmp_path: Path, name: str = "sample.ipynb") -> Path:
         "cells": [
             {
                 "cell_type": "markdown",
-                "source": ["# Тестовый Notebook\n", "Это markdown ячейка."]
+                "source": ["# Test Notebook\n", "This is a markdown cell."]
             },
             {
                 "cell_type": "code",
@@ -515,7 +515,7 @@ def test_ipynb_basic_processing(monkeypatch, tmp_path):
     content = out_file.read_text(encoding="utf-8")
     
     assert "[NOTEBOOK:" in content
-    assert "# Тестовый Notebook" in content
+    assert "# Test Notebook" in content
     assert "import numpy as np" in content
     assert "print('Hello')" in content
     lines = content.split('\n')
@@ -527,8 +527,8 @@ def test_ipynb_extracts_markdown_and_code_only(monkeypatch, tmp_path):
     
     notebook = {
         "cells": [
-            {"cell_type": "raw", "source": ["RAW: игнорируется"]},
-            {"cell_type": "markdown", "source": ["## Markdown ячейка"]},
+            {"cell_type": "raw", "source": ["RAW: ignored"]},
+            {"cell_type": "markdown", "source": ["## Markdown cell"]},
             {"cell_type": "code", "source": ["x = 1"], "outputs": [{"text": ["output"]}]}
         ],
         "metadata": {},
@@ -552,10 +552,10 @@ def test_ipynb_extracts_markdown_and_code_only(monkeypatch, tmp_path):
     assert merger.merge() is True
     content = out_file.read_text(encoding="utf-8")
     
-    assert "## Markdown ячейка" in content
+    assert "## Markdown cell" in content
     assert "x = 1" in content
-    assert "RAW: игнорируется" not in content
-    assert "output" not in content  # Output игнорируется
+    assert "RAW: ignored" not in content
+    assert "output" not in content
 
 
 def test_ipynb_malformed_json_handling(monkeypatch, tmp_path):
@@ -606,7 +606,7 @@ def test_ipynb_with_mixed_file_types(monkeypatch, tmp_path):
     
     ipynb_file = create_sample_ipynb(tmp_path)
     py_file = tmp_path / "script.py"
-    py_file.write_text("# Python файл\nprint('test')", encoding="utf-8")
+    py_file.write_text("# Python file\nprint('test')", encoding="utf-8")
     
     out_file = tmp_path / "merged.txt"
     cfg = make_config(
@@ -622,7 +622,7 @@ def test_ipynb_with_mixed_file_types(monkeypatch, tmp_path):
     content = out_file.read_text(encoding="utf-8")
     
     assert "[NOTEBOOK:" in content
-    assert "# Python файл" in content
+    assert "# Python file" in content
 
 
 def test_ipynb_respects_file_size_limit(monkeypatch, tmp_path):
@@ -714,7 +714,7 @@ def test_ipynb_unicode_support(monkeypatch, tmp_path):
     notebook = {
         "cells": [{
             "cell_type": "markdown",
-            "source": ["# Unicode тест\n", "Русский текст: привет\n", "Спецсимволы: café ☕ > < &"]
+            "source": ["# Unicode test\n", "Russian text: привет\n", "Special characters: café ☕ > < &"]
         }],
         "metadata": {},
         "nbformat": 4,
@@ -737,7 +737,7 @@ def test_ipynb_unicode_support(monkeypatch, tmp_path):
     assert merger.merge() is True
     content = out_file.read_text(encoding="utf-8")
     
-    assert "Русский текст: привет" in content
+    assert "Russian text: привет" in content
     assert "café ☕" in content
 
 
