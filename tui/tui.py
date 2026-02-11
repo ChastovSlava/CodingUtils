@@ -646,10 +646,6 @@ class SortingStyleTab(Vertical):
         )
         
         yield Label("Max width (--max-width):")
-        if hasattr(main_screen, 'tree_max_width'):
-            max_width_value = main_screen.tree_max_width
-        else:
-            max_width_value = ""
             
         yield Input(
             placeholder="80",
